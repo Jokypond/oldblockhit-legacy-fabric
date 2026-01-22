@@ -3,11 +3,11 @@ package io.github.takfsg.oldblockhit.mixin;
 import io.github.takfsg.oldblockhit.config.Config;
 import net.minecraft.entity.player.PlayerEntity;
 import org.spongepowered.asm.mixin.Mixin;
+import net.fabricmc.loader.api.FabricLoader;
 import org.spongepowered.asm.mixin.Overwrite;
 
 @Mixin(PlayerEntity.class)
 public class PlayerEntityMixin {
-
     private float currentHeight = 1.62F;
     private long lastChangeTime = System.currentTimeMillis();
 
@@ -18,6 +18,10 @@ public class PlayerEntityMixin {
      */
     @Overwrite
     public float getEyeHeight() {
+        if (FabricLoader.getInstance().isModLoaded("lerpsneak")){
+           System.out.println("[OldBlockHit] Lerp Sneak detected! Disabling old sneak.");
+           return 0;
+        }
         PlayerEntity parent = (PlayerEntity)(Object)this;
         if (Config.oldSneak) {
             int timeDelay = 1000 / 60;
